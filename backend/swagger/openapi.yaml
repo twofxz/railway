@@ -1,0 +1,185 @@
+openapi: 3.0.0
+info:
+  title: NeoTime AI Backend API
+  description: REST API for NeoTime AI Dashboard metrics and analytics
+  version: 1.0.0
+  contact:
+    name: NeoTime AI Team
+    url: https://neotime.ai
+
+servers:
+  - url: http://localhost:8080
+    description: Development server
+
+paths:
+  /api/health:
+    get:
+      summary: Health check endpoint
+      description: Returns the health status of the API
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+                  uptime:
+                    type: number
+                    description: Server uptime in seconds
+
+  /api/metrics/summary:
+    get:
+      summary: Get metrics summary
+      description: Returns aggregated metrics for the specified clinic and date range
+      parameters:
+        - name: clinic_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID of the clinic
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+          description: Start date (YYYY-MM-DD format)
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+          description: End date (YYYY-MM-DD format)
+      responses:
+        '200':
+          description: Metrics summary
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  agendamentosHoje:
+                    type: number
+                    description: Appointments scheduled for today
+                  agendamentosPeriodo:
+                    type: number
+                    description: Total appointments in the period
+                  tempoMedioRespostaSeg:
+                    type: number
+                    description: Average response time in seconds
+                  p50RespostaSeg:
+                    type: number
+                    description: Median response time in seconds
+                  taxaResposta:
+                    type: number
+                    description: Response rate percentage
+                  noShows:
+                    type: number
+                    description: Number of no-shows
+                  faltasReagendadas:
+                    type: number
+                    description: Number of rescheduled appointments from no-shows
+        '400':
+          description: Invalid query parameters
+        '500':
+          description: Internal server error
+
+  /api/metrics/timeseries:
+    get:
+      summary: Get metrics timeseries
+      description: Returns timeseries data for a specific metric
+      parameters:
+        - name: clinic_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: metric
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [agendamentos, resposta_p50, resposta_media, no_show, taxa_resposta]
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{4}-\d{2}-\d{2}$'
+      responses:
+        '200':
+          description: Timeseries data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    day:
+                      type: string
+                      format: date
+                    value:
+                      type: number
+
+  /api/appointments/recent:
+    get:
+      summary: Get recent appointments
+      description: Returns the most recent appointments for a clinic
+      parameters:
+        - name: clinic_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: List of recent appointments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    patient_id:
+                      type: string
+                      format: uuid
+                    status:
+                      type: string
+                      enum: [scheduled, rescheduled, canceled, no_show, completed]
+                    scheduled_for:
+                      type: string
+                      format: date-time
+                    scheduled_at:
+                      type: string
+                      format: date-time

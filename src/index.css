@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* NeoTime AI Design System - Futuristic Dark Theme */
+
+@layer base {
+  :root {
+    /* Core NeoTime AI Colors */
+    --neo-black: 0 0% 0%;
+    --neo-green: 150 100% 50%;
+    --neo-white: 0 0% 100%;
+    --neo-gray-dark: 0 0% 8%;
+    --neo-gray-medium: 0 0% 15%;
+    --neo-gray-light: 0 0% 25%;
+    --neo-green-glow: 150 100% 50%;
+    --neo-green-dark: 150 100% 40%;
+    
+    /* Main Theme Colors */
+    --background: var(--neo-black);
+    --foreground: var(--neo-white);
+    
+    --card: var(--neo-gray-dark);
+    --card-foreground: var(--neo-white);
+    
+    --popover: var(--neo-gray-dark);
+    --popover-foreground: var(--neo-white);
+    
+    --primary: var(--neo-green);
+    --primary-foreground: var(--neo-black);
+    
+    --secondary: var(--neo-gray-medium);
+    --secondary-foreground: var(--neo-white);
+    
+    --muted: var(--neo-gray-light);
+    --muted-foreground: 0 0% 70%;
+    
+    --accent: var(--neo-green);
+    --accent-foreground: var(--neo-black);
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: var(--neo-white);
+    
+    --border: var(--neo-gray-medium);
+    --input: var(--neo-gray-medium);
+    --ring: var(--neo-green);
+    
+    --radius: 0.75rem;
+    
+    /* Gradients */
+    --gradient-neo: linear-gradient(135deg, hsl(var(--neo-green)) 0%, hsl(var(--neo-green-dark)) 100%);
+    --gradient-glow: linear-gradient(135deg, hsl(var(--neo-green) / 0.2) 0%, transparent 50%);
+    --gradient-card: linear-gradient(135deg, hsl(var(--neo-gray-dark)) 0%, hsl(var(--neo-gray-medium)) 100%);
+    
+    /* Shadows & Effects */
+    --shadow-neo: 0 0 20px hsl(var(--neo-green) / 0.3);
+    --shadow-glow: 0 0 40px hsl(var(--neo-green) / 0.5);
+    --shadow-card: 0 4px 20px hsl(0 0% 0% / 0.3);
+    
+    /* Animation */
+    --transition-neo: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--neo-gray-dark));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--neo-gray-medium));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--neo-green));
+  }
+}
